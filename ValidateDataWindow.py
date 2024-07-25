@@ -1,6 +1,7 @@
 import tkinter as tk
+import customtkinter as ctk
 import os
-from tkinter import ttk, filedialog, messagebox
+from tkinter import filedialog, messagebox
 from ManageDataValidation import ManageDataValidation
 
 
@@ -20,43 +21,46 @@ class ValidateDataWindow:
 
     def display_window(self):
 
-        self.root = tk.Tk()
+        self.root = ctk.CTk()
         self.root.title("Database Application")
-        window_width = 450
-        window_height = 200
+        window_width = 428
+        window_height = 280
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         center_x = int(screen_width / 2 - window_width / 2)
         center_y = int(screen_height / 2 - window_height / 2)
         self.root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-        frame = tk.Frame(self.root)
-        frame.pack(padx=10, pady=15)
+        frame = ctk.CTkFrame(self.root)
+        frame.pack(padx=10, pady=10, fill='both', expand=True)
 
-        file_label = ttk.Label(frame, text="Select Excel file:")
-        file_label.grid(row=0, column=0, padx=10, pady=5)
+        file_label = ctk.CTkLabel(frame, text="Select Excel file:", font=("Arial", 13, "bold"))
+        file_label.grid(row=0, pady=(15, 10), padx=(60, 1))
 
-        self.file_entry = ttk.Entry(frame, width=30)
-        self.file_entry.grid(row=0, column=1, padx=10, pady=5)
+        self.file_entry = ctk.CTkEntry(frame, font=("Arial", 12), width=180, height=25)
+        self.file_entry.grid(row=0, column=1, pady=(15, 10), padx=(0, 20))
 
-        browse_button = ttk.Button(frame, text="Search", command=self.browse)
-        browse_button.grid(row=0, column=2, padx=10, pady=5)
+        browse_button = ctk.CTkButton(frame, text="Search", font=("Arial", 13, "bold"), width=150, height=30,
+                                      border_color="#000080", border_width=2, command=self.browse)
+        browse_button.grid(row=1, column=0, columnspan=3, pady=(5, 5), padx=(5, 5))
 
-        table = ttk.Label(frame, text="Select table:")
-        table.grid(row=1, column=0, padx=10, pady=5)
+        table = ctk.CTkLabel(frame, text="Select database table:", font=("Arial", 13, "bold"))
+        table.grid(row=2, column=0, pady=(10, 10), padx=(25, 1))
 
-        self.tb_combobox = ttk.Combobox(frame)
-        self.tb_combobox['values'] = self.tables
-        self.tb_combobox.grid(row=1, column=1, padx=10, pady=5)
+        self.tb_combobox = ctk.CTkComboBox(frame, values=self.tables, font=("Arial", 12), width=180, height=25)
+        self.tb_combobox.grid(row=2, column=1, pady=(10, 10), padx=(0, 20))
 
-        validate_button = ttk.Button(frame, text="Validate data", command=self.check_data)
-        validate_button.grid(row=2, column=0, columnspan=3, padx=10, pady=5)
+        validate_button = ctk.CTkButton(frame, text="Validate data", font=("Arial", 14, "bold"),
+                                        width=180, height=40, command=self.check_data)
+        validate_button.grid(row=3, column=0, pady=(10, 5), padx=(20, 1))
 
-        check_errors_button = ttk.Button(frame, text="Check errors", command=self.check_errors)
-        check_errors_button.grid(row=3, column=0, columnspan=3, padx=10, pady=5)
+        check_errors_button = ctk.CTkButton(frame, text="Check errors", font=("Arial", 14, "bold"), width=180,
+                                            height=40, command=self.check_errors)
+        check_errors_button.grid(row=3, column=1, pady=(10, 5), padx=(5, 20))
 
-        return_button = ttk.Button(frame, text="Back to menu", command=self.go_to_main_window)
-        return_button.grid(row=4, column=0, columnspan=3, padx=10, pady=5)
+        return_button = ctk.CTkButton(frame, text="Back to menu", font=("Arial", 14, "bold"), width=370, height=40,
+                                      command=self.go_to_main_window)
+        return_button.grid(row=4, columnspan=5, padx=10, pady=5)
 
         self.root.mainloop()
 

@@ -1,6 +1,6 @@
-import tkinter as tk
+import customtkinter as ctk
 import pandas as pd
-from tkinter import ttk, filedialog, messagebox
+from tkinter import filedialog, messagebox
 
 
 class GenerateExcel:
@@ -15,31 +15,32 @@ class GenerateExcel:
         self.take_tables()
 
     def display_window(self):
-        self.root = tk.Tk()
+        self.root = ctk.CTk()
         self.root.title("Database Application")
-        window_width = 250
-        window_height = 200
+        window_width = 300
+        window_height = 270
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         center_x = int(screen_width / 2 - window_width / 2)
         center_y = int(screen_height / 2 - window_height / 2)
         self.root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-        frame = tk.Frame(self.root)
-        frame.pack(padx=10, pady=23)
+        frame = ctk.CTkFrame(self.root)
+        frame.pack(padx=10, pady=10, fill='both', expand=True)
 
-        table = ttk.Label(frame, text="Choose table:")
-        table.pack(pady=5)
+        table = ctk.CTkLabel(frame, text="Choose table", font=("Arial", 18, "bold"))
+        table.pack(pady=(20, 10))
 
-        self.tb_combobox = ttk.Combobox(frame)
-        self.tb_combobox['values'] = self.tables
+        self.tb_combobox = ctk.CTkComboBox(frame, values=self.tables, width=180, height=30)
         self.tb_combobox.pack(pady=10)
 
-        generate_button = ttk.Button(frame, text="Generate Excel file", command=self.generate_excel)
+        generate_button = ctk.CTkButton(frame, text="Generate Excel file", font=("Arial", 14, "bold"), width=180,
+                                        height=40, command=self.generate_excel)
         generate_button.pack(pady=10)
 
-        return_button = ttk.Button(frame, text="Back to menu", command=self.go_to_main_window)
-        return_button.pack(pady=5)
+        return_button = ctk.CTkButton(frame, text="Back to menu", font=("Arial", 14, "bold"), width=180, height=40,
+                                      command=self.go_to_main_window)
+        return_button.pack(pady=10)
 
         self.root.mainloop()
 
@@ -53,7 +54,7 @@ class GenerateExcel:
     def generate_excel(self):
         table_selected = self.tb_combobox.get()
         if not table_selected:
-            tk.messagebox.showerror("Error", "Table has not been chosen.")
+            messagebox.showerror("Error", "Table has not been chosen.")
             return
         cursor = self.connection.cursor()
         cursor.execute(f"DESCRIBE {self.database}.{table_selected}")
@@ -68,9 +69,9 @@ class GenerateExcel:
             df = pd.DataFrame(data)
             df.to_excel(file_path, index=False)
 
-            tk.messagebox.showinfo("Info", "The Excel file was generated successfully.")
+            messagebox.showinfo("Info", "The Excel file was generated successfully.")
         except Exception as e:
-            tk.messagebox.showerror("Error", f"An error occurred while generating the Excel file: {str(e)}")
+            messagebox.showerror("Error", f"An error occurred while generating the Excel file: {str(e)}")
 
     def go_to_main_window(self):
         self.root.destroy()

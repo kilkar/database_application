@@ -1,5 +1,5 @@
-from tkinter import ttk, filedialog, messagebox
-import tkinter as tk
+import customtkinter as ctk
+from tkinter import filedialog, messagebox
 import os
 import shutil
 import sys
@@ -15,32 +15,37 @@ class EndConnection:
         self.history_folder = "history"
 
     def display_window(self):
-        self.root = tk.Tk()
+        self.root = ctk.CTk()
         self.root.title("End Connection")
-        window_width = 410
-        window_height = 150
+        window_width = 310
+        window_height = 230
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         center_x = int(screen_width / 2 - window_width / 2)
         center_y = int(screen_height / 2 - window_height / 2)
         self.root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-        frame = tk.Frame(self.root)
-        frame.pack(padx=10, pady=15)
+        frame = ctk.CTkFrame(self.root)
+        frame.pack(padx=10, pady=10, fill='both', expand=True)
 
-        save_button = ttk.Button(frame, text="Save history before closing", command=self.save_history)
-        save_button.grid(row=0, column=0, columnspan=3, padx=10, pady=5)
+        save_button = ctk.CTkButton(frame, text="Save history before closing", font=("Arial", 14, "bold"), width=230,
+                                    height=45, command=self.save_history)
+        save_button.grid(row=0, pady=(20, 10), padx=(30, 40))
 
-        end_connection_button = ttk.Button(frame, text="Close without saving history", command=self.end_connection)
-        end_connection_button.grid(row=1, column=0, columnspan=3, padx=10, pady=5)
+        end_connection_button = ctk.CTkButton(frame, text="Close without saving history", font=("Arial", 14, "bold"),
+                                              width=230, height=45, command=self.end_connection)
+        end_connection_button.grid(row=1, pady=(10, 10), padx=(30, 40))
 
-        back_to_menu_button = ttk.Button(frame, text="Back to main menu", command=self.go_to_main_window)
-        back_to_menu_button.grid(row=2, column=0, columnspan=3, padx=10, pady=5)
+        back_to_menu_button = ctk.CTkButton(frame, text="Back to main menu", font=("Arial", 14, "bold"), width=230,
+                                            height=45, command=self.go_to_main_window)
+        back_to_menu_button.grid(row=2, pady=(10, 10), padx=(30, 40))
+
+        self.root.mainloop()
 
     def end_connection(self):
         if not self.history_saved and os.path.exists(self.history_folder):
-            result = messagebox.askquestion("Question", "Your import history won't be saved. Do you want to end the "
-                                                        "connection?")
+            result = messagebox.askquestion("Question", "Your import history won't be saved. Do you want to end the"
+                                                        " connection?")
             if result == 'no':
                 return
             else:
@@ -64,7 +69,7 @@ class EndConnection:
                 initialdir=os.getcwd(),
                 title="Save as",
                 initialfile="history",
-                filetypes=[("Folder", "")],
+                filetypes=[("Folder", "")]
             )
             if new_folder:
                 try:
@@ -78,4 +83,5 @@ class EndConnection:
 
     def go_to_main_window(self):
         self.root.destroy()
-        self.main_window.deiconify()
+        if self.main_window:
+            self.main_window.deiconify()

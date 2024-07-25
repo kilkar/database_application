@@ -1,4 +1,5 @@
-from tkinter import Toplevel, Label, Entry, Button, messagebox
+from tkinter import messagebox
+import customtkinter as ctk
 import pandas as pd
 import os
 from openpyxl import Workbook
@@ -7,6 +8,7 @@ import numpy as np
 
 class ManageDataValidation:
     def __init__(self, connection, database, on_import=None):
+        self.root = ctk.CTk()
         self.connection = connection
         self.database = database
         self.tables = []
@@ -57,39 +59,47 @@ class ManageDataValidation:
 
     def correct_columns(self, wrong_columns, missing_columns, table_name):
 
-        new_window = Toplevel()
+        new_window = ctk.CTkToplevel(self.root)
         new_window.title("Correct Column Names")
 
-        Label(new_window, text="Wrong Column").grid(row=0, column=0)
-        Label(new_window, text="Correct Column").grid(row=0, column=1)
+        ctk.CTkLabel(new_window, text="Wrong Column", font=("Arial", 13, "bold")).grid(row=0, column=0, pady=(15, 5),
+                                                                                       padx=(20, 0))
+        ctk.CTkLabel(new_window, text="Correct Column", font=("Arial", 13, "bold")).grid(row=0, column=1, pady=(15, 5),
+                                                                                         padx=(0, 20))
 
         entries = []
         for idx, col in enumerate(wrong_columns):
-            Label(new_window, text=col).grid(row=idx + 1, column=0)
+            ctk.CTkLabel(new_window, text=col, text_color="red").grid(row=idx + 1, column=0, padx=(20, 5), pady=(5, 5))
             if idx < len(missing_columns):
-                entry = Entry(new_window)
-                entry.grid(row=idx + 1, column=1)
+                entry = ctk.CTkEntry(new_window)
+                entry.grid(row=idx + 1, column=1, padx=(5, 20), pady=(5, 5))
                 entry.insert(0, missing_columns[idx])
                 entries.append(entry)
             else:
-                Label(new_window, text="").grid(row=idx + 1, column=1)
+                ctk.CTkLabel(new_window, text="REMOVE", font=("Arial", 13, "bold")).grid(row=idx + 1, column=1,
+                                                                                         padx=(0, 20))
 
         if len(missing_columns) > len(wrong_columns):
-            Label(new_window, text="Add columns").grid(row=len(wrong_columns) + 1, column=0, columnspan=2)
+            ctk.CTkLabel(new_window, text="Add columns", font=("Arial", 13, "bold")).grid(row=len(wrong_columns) + 1,
+                                                                                          column=0, columnspan=2,
+                                                                                          pady=(10, 5))
+
             for idx in range(len(wrong_columns), len(missing_columns)):
-                Label(new_window, text="").grid(row=idx + len(wrong_columns) + 2, column=0)
-                entry = Entry(new_window)
+                ctk.CTkLabel(new_window, text="").grid(row=idx + len(wrong_columns) + 2, column=0)
+                entry = ctk.CTkEntry(new_window)
                 entry.insert(0, missing_columns[idx])
-                entry.grid(row=idx + len(wrong_columns) + 2, column=1)
+                entry.grid(row=idx + len(wrong_columns) + 2, column=1, pady=(5, 10), padx=(5, 20))
                 entries.append(entry)
 
-        Button(new_window, text="Correct column names", command=lambda: self.on_correct(wrong_columns, missing_columns,
-                                                                                        table_name, entries,
-                                                                                        new_window)).grid(
-            row=len(wrong_columns) + len(missing_columns) + 2, columnspan=2)
+        ctk.CTkButton(new_window, text="Correct column names", font=("Arial", 13, "bold"), width=150, height=30,
+                      border_color="#000080", border_width=2, command=lambda: self.on_correct(
+                wrong_columns, missing_columns, table_name, entries, new_window)).grid(
+            row=len(wrong_columns) + len(missing_columns) + 2, columnspan=2, pady=(15, 5))
 
-        Button(new_window, text="Do not correct column names", command=lambda: self.do_not_correct(new_window)).grid(
-            row=len(wrong_columns) + len(missing_columns) + 5, columnspan=2)
+        ctk.CTkButton(new_window, text="Do not correct column names", font=("Arial", 13, "bold"), width=150,
+                      height=30, border_color="#000080", border_width=2,
+                      command=lambda: self.do_not_correct(new_window)).grid(
+            row=len(wrong_columns) + len(missing_columns) + 5, columnspan=2, pady=(5, 15))
 
     def do_not_correct(self, new_window):
         new_window.destroy()

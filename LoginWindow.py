@@ -1,4 +1,4 @@
-import tkinter as tk
+import customtkinter as ctk
 from DatabaseConnector import DatabaseConnector
 
 
@@ -6,7 +6,7 @@ class LoginWindow:
 
     def __init__(self):
         self.db_connector = DatabaseConnector()
-        self.root = tk.Tk()
+        self.root = ctk.CTk()
         self.connection = None
         self.entry_host = None
         self.entry_login = None
@@ -20,84 +20,75 @@ class LoginWindow:
     def validate(self):
         go_to_database_connector = True
 
-        if len(self.entry_host.get()) == 0:
-            self.host_error.config(text="Host field is required")
+        if not self.entry_host.get():
+            self.host_error.configure(text="Host field is required")
             go_to_database_connector = False
         else:
-            self.host_error.config(text="")
-        if len(self.entry_login.get()) == 0:
-            self.login_error.config(text="Login field is required")
+            self.host_error.configure(text="")
+        if not self.entry_login.get():
+            self.login_error.configure(text="Login field is required")
             go_to_database_connector = False
         else:
-            self.login_error.config(text="")
-        if len(self.entry_password.get()) == 0:
-            self.password_error.config(text="Password field is required")
+            self.login_error.configure(text="")
+        if not self.entry_password.get():
+            self.password_error.configure(text="Password field is required")
             go_to_database_connector = False
         else:
-            self.password_error.config(text="")
-        if len(self.entry_database.get()) == 0:
-            self.database_error.config(text="Database name field is required")
+            self.password_error.configure(text="")
+        if not self.entry_database.get():
+            self.database_error.configure(text="Database field is required")
             go_to_database_connector = False
         else:
-            self.database_error.config(text="")
+            self.database_error.configure(text="")
 
         if go_to_database_connector:
-            self.db_connector.connect_to_database(self.root, self.entry_host, self.entry_login, self.entry_password, 
+            self.db_connector.connect_to_database(self.root, self.entry_host, self.entry_login, self.entry_password,
                                                   self.entry_database)
             
     def display_window(self):
-        frame = tk.Frame(self.root)
         self.root.title("Database Application")
 
-        window_width = 300
-        window_height = 250
+        window_width = 305
+        window_height = 390
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         center_x = int(screen_width / 2 - window_width / 2)
         center_y = int(screen_height / 2 - window_height / 2)
         self.root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-        frame.pack(padx=10, pady=23)
+        frame = ctk.CTkFrame(self.root)
+        frame.pack(padx=13, pady=14, fill='both', expand=True)
 
-        host = tk.Label(frame, text="Host:")
-        host.grid(row=0, column=0)
-        self.entry_host = tk.Entry(frame)
-        self.entry_host.grid(row=0, column=1)
-        self.host_error = tk.Label(frame, text="", fg="red")
-        self.host_error.grid(row=1, column=1)
+        host_label = ctk.CTkLabel(frame, text="Host:", font=("Arial", 14, "bold"))
+        host_label.grid(row=0, column=0, padx=(20, 5), pady=(20, 5))
+        self.entry_host = ctk.CTkEntry(frame)
+        self.entry_host.grid(row=0, column=1, padx=(10, 5), pady=(20, 5))
+        self.host_error = ctk.CTkLabel(frame, text="", text_color="red")
+        self.host_error.grid(row=1, column=1, padx=5, pady=(2, 2), sticky="w")
 
-        login = tk.Label(frame, text="Login:")
-        login.grid(row=2, column=0)
-        self.entry_login = tk.Entry(frame)
-        self.entry_login.grid(row=2, column=1)
-        self.login_error = tk.Label(frame, text="", fg="red")
-        self.login_error.grid(row=3, column=1)
+        login_label = ctk.CTkLabel(frame, text="Login:", font=("Arial", 14, "bold"))
+        login_label.grid(row=2, column=0, padx=(20, 5), pady=(5, 5))
+        self.entry_login = ctk.CTkEntry(frame)
+        self.entry_login.grid(row=2, column=1, padx=(10, 5), pady=(2, 5))
+        self.login_error = ctk.CTkLabel(frame, text="", text_color="red")
+        self.login_error.grid(row=3, column=1, padx=5, pady=(2, 2), sticky="w")
 
-        password = tk.Label(frame, text="Password:")
-        password.grid(row=4, column=0)
-        self.entry_password = tk.Entry(frame, show="*")
-        self.entry_password.grid(row=4, column=1)
-        self.password_error = tk.Label(frame, text="", fg="red")
-        self.password_error.grid(row=5, column=1)
+        password_label = ctk.CTkLabel(frame, text="Password:", font=("Arial", 14, "bold"))
+        password_label.grid(row=4, column=0, padx=(20, 5), pady=5)
+        self.entry_password = ctk.CTkEntry(frame, show="*")
+        self.entry_password.grid(row=4, column=1, padx=(10, 5), pady=5)
+        self.password_error = ctk.CTkLabel(frame, text="", text_color="red")
+        self.password_error.grid(row=5, column=1, padx=5, pady=(2, 2), sticky="w")
 
-        database = tk.Label(frame, text="Database name:  ")
-        database.grid(row=6, column=0)
-        self.entry_database = tk.Entry(frame)
-        self.entry_database.grid(row=6, column=1)
-        self.database_error = tk.Label(frame, text="", fg="red")
-        self.database_error.grid(row=7, column=1)
+        database_label = ctk.CTkLabel(frame, text="Database:", font=("Arial", 14, "bold"))
+        database_label.grid(row=6, column=0, padx=(20, 5), pady=5)
+        self.entry_database = ctk.CTkEntry(frame)
+        self.entry_database.grid(row=6, column=1, padx=(10, 5), pady=5)
+        self.database_error = ctk.CTkLabel(frame, text="", text_color="red")
+        self.database_error.grid(row=7, column=1, padx=5, pady=(2, 2), sticky="w")
 
-        login_button = tk.Button(frame, text="Connect", command=self.validate)
-        login_button.grid(row=8, columnspan=2, pady=10)
-
-        default_text = "localhost"
-        self.entry_host.insert(0, default_text)
-
-        default_text2 = "root"
-        self.entry_login.insert(0, default_text2)
-
-        default_text4 = "orders"
-        self.entry_database.insert(0, default_text4)
+        login_button = ctk.CTkButton(frame, text="Connect", font=("Arial", 14, "bold"), command=self.validate)
+        login_button.grid(row=8, columnspan=2, pady=(5, 10), padx=(65, 20))
 
         self.root.mainloop()
 
